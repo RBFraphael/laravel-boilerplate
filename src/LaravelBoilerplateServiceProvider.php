@@ -3,26 +3,20 @@
 namespace RBFraphael\LaravelBoilerplate;
 
 use Illuminate\Support\ServiceProvider;
+use RBFraphael\LaravelBoilerplate\Console\Commands\MakeRepositoryCommand;
 
 class LaravelBoilerplateServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     *
-     * @return void
-     */
     public function register()
     {
-        // Registre bindings ou singletons aqui.
+        $this->commands([
+            MakeRepositoryCommand::class,
+        ]);
     }
 
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
     public function boot()
     {
         //
     }
+    
 }

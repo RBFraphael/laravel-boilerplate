@@ -1,0 +1,17 @@
+<?php
+
+namespace {{ namespace }};
+
+use RBFRaphael\LaravelBoilerplate\Repository;
+
+class {{ class }}Repository extends Repository
+{
+    protected $searchable = [];
+    protected $filterable = [];
+    protected $related = [];
+
+    public function __construct()
+    {
+        parent::__construct(\App\Models\{{ model }}::class);
+    }
+}
