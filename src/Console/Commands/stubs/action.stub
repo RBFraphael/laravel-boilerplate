@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-class {{ class }} extends Repository
+class {{ class }}
 {
     public static function handle()
     {
