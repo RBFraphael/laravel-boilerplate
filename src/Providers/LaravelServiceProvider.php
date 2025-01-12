@@ -1,11 +1,11 @@
 <?php
 
-namespace RBFraphael\LaravelBoilerplate;
+namespace RBFraphael\LaravelBoilerplate\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use RBFraphael\LaravelBoilerplate\Console\Commands\MakeRepositoryCommand;
 
-class LaravelBoilerplateServiceProvider extends ServiceProvider
+class LaravelServiceProvider extends ServiceProvider
 {
     public function register()
     {
