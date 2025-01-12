@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use RBFRaphael\LaravelBoilerplate\Repository;
+use RBFraphael\LaravelBoilerplate\Repositories\Repository;
 
 class {{ class }} extends Repository
 {

@@ -26,25 +26,21 @@ class MakeRepositoryCommand extends GeneratorCommand
 
     protected function getPath($name)
     {
+        $name = $this->getNameInput();
         return app_path("Repositories/{$name}.php");
     }
 
-    public function handle()
+    protected function buildClass($name)
     {
-        // Use o método original do GeneratorCommand para criar o arquivo
-        $path = $this->getPath($this->qualifyClass($this->getNameInput()));
+        // Gera o conteúdo base do stub
+        $stub = parent::buildClass($name);
 
-        // Verifica se o arquivo já existe
-        if ($this->files->exists($path)) {
-            $this->error('Repository already exists!');
-            return false;
+        // Verifica se o parâmetro --model foi passado
+        if ($model = $this->option('model')) {
+            $modelClass = $this->qualifyModel($model); // Obtém o namespace completo do modelo
+            $stub = str_replace('{{ model }}', $modelClass, $stub);
         }
 
-        // Cria o arquivo
-        $this->makeDirectory($path);
-        $this->files->put($path, $this->sortImports($this->buildClass($this->getNameInput())));
-
-        // Exibe a mensagem de sucesso
-        $this->info("Repository [{$path}] created successfully.");
+        return $stub;
     }
 }

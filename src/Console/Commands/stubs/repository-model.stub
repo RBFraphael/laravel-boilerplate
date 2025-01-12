@@ -2,9 +2,9 @@
 
 namespace {{ namespace }};
 
-use RBFRaphael\LaravelBoilerplate\Repository;
+use RBFraphael\LaravelBoilerplate\Repositories\Repository;
 
-class {{ class }}Repository extends Repository
+class {{ class }} extends Repository
 {
     protected $searchable = [];
     protected $filterable = [];
@@ -12,6 +12,6 @@ class {{ class }}Repository extends Repository
 
     public function __construct()
     {
-        parent::__construct(\App\Models\{{ model }}::class);
+        parent::__construct(\{{ model }}::class);
     }
 }
