@@ -1,7 +1,23 @@
 {
     "name": "rbfraphael/laravel-boilerplate",
     "description": "Additional components for Laravel",
-    "type": "library",
+    "keywords": [
+        "repository",
+        "action",
+        "enum",
+        "uuid",
+        "laravel"
+    ],
+    "homepage": "https://github.com/rbfraphael/laravel-boilerplate",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Raphael Batista",
+            "email": "rbfraphael@gmail.com",
+            "homepage": "https://rbfraphael.github.io",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": ">=8.2",
         "laravel/framework": "^11.0"
@@ -17,5 +33,7 @@
                 "RBFraphael\\LaravelBoilerplate\\LaravelBoilerplateServiceProvider"
             ]
         }
-    }
+    },
+    "funding": [],
+    "prefer-stable": true
 }
