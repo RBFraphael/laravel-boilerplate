@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Repository
+abstract class Repository
 {
     protected $searchable = [];
     protected $filterable = [];
