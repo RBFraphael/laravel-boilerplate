@@ -1,0 +1,29 @@
+<?php
+
+namespace {{ namespace }};
+
+use RBFraphael\LaravelBoilerplate\Enums\Enum;
+
+class {{ class }} extends Enum
+{
+    /**
+     * Add your options here as const variables
+     * as the following examples:
+     * 
+     * const MALE = "male";
+     * const FEMALE = "female";
+     * const OTHER = "other";
+     */
+
+    /**
+     * You can also rewrite this method to get
+     * label for each value
+     * 
+     * @param mixed $value 
+     * @return string 
+     */
+    public static function label($value): string
+    {
+        return $value;
+    }
+}

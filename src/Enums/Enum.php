@@ -2,7 +2,7 @@
 
 namespace RBFraphael\LaravelBoilerplate\Enums;
 
-class Enum
+abstract class Enum
 {
     public static function values(): array
     {
