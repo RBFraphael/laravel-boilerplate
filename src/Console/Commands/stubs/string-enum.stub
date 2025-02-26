@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ namespace }};
+
+use RBFraphael\LaravelBoilerplate\Traits\StringEnum;
+
+enum {{ class }}: string
+{
+    use StringEnum;
+}
