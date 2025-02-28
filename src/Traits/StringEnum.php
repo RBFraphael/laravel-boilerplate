@@ -18,4 +18,15 @@ trait StringEnum
             return $case->name;
         }, self::cases());
     }
+
+    public static function fromCase(string $searchCase): self|null
+    {
+        foreach (self::cases() as $case) {
+            if ($case->name == $searchCase) {
+                return $case;
+            }
+        }
+
+        return null;
+    }
 }
