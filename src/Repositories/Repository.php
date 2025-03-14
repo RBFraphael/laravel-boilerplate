@@ -146,8 +146,9 @@ abstract class Repository
      */
     public function find($id, $with = [])
     {
+        $key = $this->model->getKeyName();
         $with = request()->has('with') ? request()->get('with') : $with;
-        return $this->findBy('id', $id, $with);
+        return $this->findBy($key, $id, $with);
     }
 
     public function findBy($key, $value, $with = [])
