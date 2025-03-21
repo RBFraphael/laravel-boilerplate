@@ -21,13 +21,13 @@ class MakeRepositoryCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Repositories';
+        return $rootNamespace . '\Http\Repositories';
     }
 
     protected function getPath($name)
     {
         $name = $this->getNameInput();
-        return app_path("Repositories/{$name}.php");
+        return app_path("Http/Repositories/{$name}.php");
     }
 
     protected function buildClass($name)

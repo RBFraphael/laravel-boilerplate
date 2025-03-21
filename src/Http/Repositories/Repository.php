@@ -1,6 +1,6 @@
 <?php
 
-namespace RBFraphael\LaravelBoilerplate\Repositories;
+namespace RBFraphael\LaravelBoilerplate\Http\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
