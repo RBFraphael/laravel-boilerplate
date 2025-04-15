@@ -121,7 +121,6 @@ abstract class Repository
     /**
      * Update a model instance
      *
-     * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|false
      */
     public function update(mixed $id, array $data)
@@ -142,7 +141,6 @@ abstract class Repository
     /**
      * Delete a model instance
      *
-     * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|false
      */
     public function delete(mixed $id)
@@ -163,14 +161,13 @@ abstract class Repository
     /**
      * Find a model instance
      *
-     * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function find(mixed $id, ?array $with = [])
     {
         $key = $this->model->getKeyName();
         $with = request()->has('with') ? request()->get('with') : $with;
-        
+
         return $this->findBy($key, $id, $with);
     }
 
@@ -199,10 +196,9 @@ abstract class Repository
     /**
      * Load passed relations
      *
-     * @param  array  $relations
      * @return \App\Repositories\Repository
      */
-    public function with(?array $relations = [])
+    public function with(array|string $relations = [])
     {
         if (is_string($relations)) {
             $relations = explode(',', $relations);
