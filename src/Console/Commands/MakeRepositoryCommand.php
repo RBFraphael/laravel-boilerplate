@@ -13,6 +13,9 @@ class MakeRepositoryCommand extends GeneratorCommand
     protected function getStub()
     {
         if ($this->option('model')) {
+            if($this->option('resource')){
+                return __DIR__ . '/stubs/repository-model-resource.stub';
+            }
             return __DIR__ . '/stubs/repository-model.stub';
         }
 
@@ -39,6 +42,12 @@ class MakeRepositoryCommand extends GeneratorCommand
         if ($model = $this->option('model')) {
             $modelClass = $this->qualifyModel($model); // Obtém o namespace completo do modelo
             $stub = str_replace('{{ model }}', $modelClass, $stub);
+        }
+
+        // Verifica se o parâmetro --resource foi passado
+        if ($resource = $this->option('resource')) {
+            $resourceClass = $this->qualifyModel($resource); // Obtém o namespace completo do resource
+            $stub = str_replace('{{ resource }}', $resourceClass, $stub);
         }
 
         return $stub;

@@ -7,7 +7,9 @@ use RBFraphael\LaravelBoilerplate\Repositories\Repository;
 class {{ class }} extends Repository
 {
     protected $searchable = [];
+
     protected $filterable = [];
+    
     protected $related = [];
     
     // Implement your repository here

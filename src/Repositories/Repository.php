@@ -4,23 +4,31 @@ namespace RBFraphael\LaravelBoilerplate\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 abstract class Repository
 {
     protected $searchable = [];
+
     protected $filterable = [];
+
     protected $related = [];
+
     protected Builder $query;
+
     protected Model $model;
+
+    protected ?string $resource = null;
 
     /**
      * Create a new class instance.
      */
-    public function __construct(string $modelClass)
+    public function __construct(string $modelClass, ?string $resource = null)
     {
         $this->model = new $modelClass;
         $this->query = $this->model->query();
+        $this->resource = $resource;
     }
 
     /**
@@ -28,25 +36,25 @@ abstract class Repository
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function all($page = 1, $perPage = 10, $search = null, $orderBy = 'id', $order = 'asc', $with = [], $paginate = true, $filters = [], $columns = ['*'])
+    public function all(?int $page = 1, ?int $perPage = 10, ?string $search = null, ?string $orderBy = 'id', ?string $order = 'asc', ?array $with = [], ?bool $paginate = true, ?array $filters = [], ?array $columns = ['*'])
     {
         $search = request()->has('search') ? request()->get('search') : $search;
         if (count($this->searchable) > 0 && $search) {
             $this->query->where(function ($query) use ($search) {
                 foreach ($this->searchable as $field) {
-                    if (str_contains($field, ".")) {
-                        $data = explode(".", $field);
+                    if (str_contains($field, '.')) {
+                        $data = explode('.', $field);
                         $key = array_pop($data);
-                        $relation = join(".", $data);
+                        $relation = implode('.', $data);
                         $query->orWhereHas($relation, function ($query) use ($key, $search) {
-                            if (str_contains(strtolower($key), "concat")) {
+                            if (str_contains(strtolower($key), 'concat')) {
                                 $query->where(DB::raw($key), 'like', "%$search%");
                             } else {
                                 $query->where($key, 'like', "%$search%");
                             }
                         });
                     } else {
-                        if (str_contains(strtolower($field), "concat")) {
+                        if (str_contains(strtolower($field), 'concat')) {
                             $query->where(DB::raw($field), 'like', "%$search%");
                         } else {
                             $query->orWhere($field, 'like', "%$search%");
@@ -74,8 +82,12 @@ abstract class Repository
             }
         }
 
-        $paginate = request()->has('no_paginate') ? !boolval(request()->get('no_paginate')) : $paginate;
-        if (!$paginate) {
+        $paginate = request()->has('no_paginate') ? ! boolval(request()->get('no_paginate')) : $paginate;
+        if (! $paginate) {
+            if (! is_null($this->resource) && class_exists($this->resource)) {
+                return $this->query->get($columns)->toResourceCollection($this->resource);
+            }
+
             return $this->query->get($columns);
         }
 
@@ -93,28 +105,34 @@ abstract class Repository
 
     /**
      * Create a new model instance
-     * 
-     * @param array $data
+     *
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function create(array $data)
     {
         $instance = $this->query->create($data);
+        if (! is_null($this->resource) && class_exists($this->resource)) {
+            return $instance->toResource($this->resource);
+        }
+
         return $instance;
     }
 
     /**
      * Update a model instance
-     * 
-     * @param mixed $id
-     * @param array $data
+     *
+     * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|false
      */
-    public function update($id, array $data)
+    public function update(mixed $id, array $data)
     {
         $instance = $this->find($id);
         if ($instance) {
             $instance->update($data);
+            if (! is_null($this->resource) && class_exists($this->resource)) {
+                return $instance->toResource($this->resource);
+            }
+
             return $instance;
         }
 
@@ -123,15 +141,19 @@ abstract class Repository
 
     /**
      * Delete a model instance
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|false
      */
-    public function delete($id)
+    public function delete(mixed $id)
     {
         $instance = $this->find($id);
         if ($instance) {
             $instance->delete();
+            if (! is_null($this->resource) && class_exists($this->resource)) {
+                return $instance->toResource($this->resource);
+            }
+
             return $instance;
         }
 
@@ -140,25 +162,33 @@ abstract class Repository
 
     /**
      * Find a model instance
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed  $id
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function find($id, $with = [])
+    public function find(mixed $id, ?array $with = [])
     {
+        $key = $this->model->getKeyName();
         $with = request()->has('with') ? request()->get('with') : $with;
-        return $this->findBy('id', $id, $with);
+
+        return $this->findBy($key, $id, $with);
     }
 
     public function findBy($key, $value, $with = [])
     {
         $this->with($with);
-        return $this->query->where($key, $value)->first();
+        $instance = $this->query->where($key, $value)->first();
+
+        if (! is_null($this->resource) && class_exists($this->resource)) {
+            return $instance->toResource($this->resource);
+        }
+
+        return $instance;
     }
 
     /**
      * Return the current query object
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Builder|null
      */
     public function getQuery()
@@ -168,11 +198,11 @@ abstract class Repository
 
     /**
      * Load passed relations
-     * 
-     * @param array $relations
+     *
+     * @param  array  $relations
      * @return \App\Repositories\Repository
      */
-    public function with($relations = [])
+    public function with(?array $relations = [])
     {
         if (is_string($relations)) {
             $relations = explode(',', $relations);
@@ -193,8 +223,12 @@ abstract class Repository
         return $this;
     }
 
-    protected function removePathsFromResult($queryResult)
+    protected function removePathsFromResult(LengthAwarePaginator $queryResult)
     {
+        if (! is_null($this->resource) && class_exists($this->resource)) {
+            $queryResult->toResourceCollection($this->resource);
+        }
+
         $result = $queryResult->toArray();
 
         $keys = [

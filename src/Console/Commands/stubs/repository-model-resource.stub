@@ -14,6 +14,6 @@ class {{ class }} extends Repository
 
     public function __construct()
     {
-        parent::__construct(\{{ model }}::class);
+        parent::__construct(\{{ model }}::class, \{{ resource }}::class);
     }
 }
