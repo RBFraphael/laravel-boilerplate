@@ -1,6 +1,6 @@
 <?php
 
-namespace RBFraphael\LaravelBoilerplate\Repositories;
+namespace RBFraphael\LaravelBoilerplate\Http\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -170,7 +170,7 @@ abstract class Repository
     {
         $key = $this->model->getKeyName();
         $with = request()->has('with') ? request()->get('with') : $with;
-
+        
         return $this->findBy($key, $id, $with);
     }
 
