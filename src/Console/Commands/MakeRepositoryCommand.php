@@ -6,7 +6,7 @@ use Illuminate\Console\GeneratorCommand;
 
 class MakeRepositoryCommand extends GeneratorCommand
 {
-    protected $signature = 'make:repository {name : Repository name} {--model= : Related model}';
+    protected $signature = 'make:repository {name : Repository name} {--model= : Related model} {--resource= : Related resource}';
     protected $description = 'Creates a new Repository class';
     protected $type = 'Repository';
 
