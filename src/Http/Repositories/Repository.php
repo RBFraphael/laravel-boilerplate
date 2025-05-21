@@ -219,6 +219,11 @@ abstract class Repository
         return $this;
     }
 
+    public function query()
+    {
+        return $this;
+    }
+
     protected function removePathsFromResult(LengthAwarePaginator $queryResult)
     {
         if (! is_null($this->resource) && class_exists($this->resource)) {
