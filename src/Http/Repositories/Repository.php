@@ -78,7 +78,12 @@ abstract class Repository
         }
         if (count($filters) > 0) {
             foreach ($filters as $key => $value) {
-                $this->query->where($key, $value);
+                $filterMethod = 'filter' . str($key)->studly();
+                if (method_exists($this, $filterMethod)) {
+                    $this->{$filterMethod}($value);
+                } else {
+                    $this->query->where($key, $value);
+                }
             }
         }
 
