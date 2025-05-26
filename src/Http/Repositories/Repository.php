@@ -36,7 +36,7 @@ abstract class Repository
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function all(?int $page = 1, ?int $perPage = 10, ?string $search = null, ?string $orderBy = 'id', ?string $order = 'asc', ?array $with = [], ?bool $paginate = true, ?array $filters = [], ?array $columns = ['*'])
+    public function all(?int $page = 1, ?int $perPage = 10, ?string $search = null, ?string $orderBy = 'id', ?string $order = 'asc', ?array $with = [], ?bool $paginate = true, ?array $filters = [], ?array $columns = ['*'], ?bool $full = true)
     {
         $search = request()->has('search') ? request()->get('search') : $search;
         if (count($this->searchable) > 0 && $search) {
@@ -88,7 +88,16 @@ abstract class Repository
         }
 
         $paginate = request()->has('no_paginate') ? ! boolval(request()->get('no_paginate')) : $paginate;
+        $page = request()->has('page') ? request()->get('page') : $page;
+        $perPage = request()->has('per_page') ? request()->get('per_page') : $perPage;
+        $full = request()->has('full') ? ! boolval(request()->get('full')) : $full;
+
         if (! $paginate) {
+
+            if(!$full){
+                $this->query->limit($perPage);
+            }
+
             if (! is_null($this->resource) && class_exists($this->resource)) {
                 return $this->query->get($columns)->toResourceCollection($this->resource);
             }
@@ -96,8 +105,6 @@ abstract class Repository
             return $this->query->get($columns);
         }
 
-        $page = request()->has('page') ? request()->get('page') : $page;
-        $perPage = request()->has('per_page') ? request()->get('per_page') : $perPage;
         $results = $this->query->paginate($perPage, $columns, 'page', $page);
 
         return $this->removePathsFromResult($results);
